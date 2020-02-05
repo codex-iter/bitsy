@@ -8,6 +8,7 @@ const port = process.env.PORT || 5000;
 
 // create server
 const server = http.createServer(app);
+server.timeout = 30000;
 server.listen(port, (err) => {
     if (err) {
         console.log('Error Occured While Starting the server');
