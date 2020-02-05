@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 mongoose.connect(process.env.BITSY_URI, {useNewUrlParser: true, useUnifiedTopology: true});
 
 // routes
-app.use('/api/shortener/new', shortener);
+app.use('/', shortener);
 
 // export module
 module.exports = app;

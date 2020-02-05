@@ -7,8 +7,34 @@ const Uri = require('../Schemas/uri');
 // creates router
 const router = express.Router();
 
-// POST request
-router.post('/', (req, res) => {
+// GET request for redirecting to original URI
+router.get('/:shorturi', (req, res) => {
+
+    // check if shortened URI is registered 
+    Uri.findOne({shortUri: req.params.shorturi}).then((data) => {
+        res.redirect(data.originalUri);
+    }).catch((err) => {
+        // if not registered, rediret to 404 page
+        res.redirect("https://www.google.com");
+    })
+});
+
+// GET request for returning all urls
+router.get('/uri/all', (req, res) => {
+    Uri.find({}).then((data) => {
+        res.json(data.map(uri => {
+                return {
+                    _id: uri._id,
+                    createdAt: uri.createdAt,
+                    originalUri: uri.originalUri,
+                    shortUri: process.env.BASE_DOMAIN + uri.shortUri
+                }
+        }));
+    });
+});
+
+// POST request for URI shortening
+router.post('/new', (req, res) => {
 
     // check if uri is valid
     const uriIsValid = validUrl.isWebUri(req.body.uri);
@@ -20,8 +46,8 @@ router.post('/', (req, res) => {
             res.json({
                 status: 201,
                 message: 'URI already shortened',
-                shortUri: data.shortUri
-            })
+                shortUri: process.env.BASE_DOMAIN + data.shortUri
+            });
         }).catch((err) => {
 
             // generate shortened URI
@@ -36,22 +62,21 @@ router.post('/', (req, res) => {
                 res.json({
                     status: 200,
                     originalUri: dataSaved.originalUri,
-                    shortUri: dataSaved.shortUri
-                })
+                    shortUri: process.env.BASE_DOMAIN + dataSaved.shortUri
+                });
             }).catch((err) => {
                 res.json({
                     status: 202,
                     message: 'Error Occured'
-                })
+                });
             });
         });
     } else {
         res.json({
             status: 203,
             message: 'Invalid URI'
-        })
+        });
     }
-    
 });
 
 // module export
