@@ -79,5 +79,30 @@ router.post('/new', (req, res) => {
     }
 });
 
+// DELETE request for deleting shortened URI
+router.delete('/delete', (req, res) => {
+
+    // delete using the _id and shortUri
+    Uri.deleteOne({_id: req.body._id, shortUri: req.body.shortUri}).then((data) => {
+
+        if (data.deletedCount === 0) {          // when data is not found
+            res.json({
+                status: 201,
+                message: 'URI not found'
+            });
+        } else {                                // when data is deleted successfully 
+            res.json({
+                status: 200,
+                message: 'Deleted Successfully'
+            });
+        }
+    }).catch((err) => {
+        res.json({
+            status: 202,
+            message: 'Error Occured'
+        });
+    });
+})
+
 // module export
 module.exports = router;
