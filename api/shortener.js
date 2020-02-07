@@ -2,7 +2,9 @@
 const express = require('express');
 const validUrl = require('valid-url');
 const shortId = require('shortid');
+const passport = require('passport');
 const Uri = require('../Schemas/uri');
+const isLoggedIn = require('../loginCheck');
 
 // creates router
 const router = express.Router();
@@ -16,11 +18,11 @@ router.get('/:shorturi', (req, res) => {
     }).catch((err) => {
         // if not registered, rediret to 404 page
         res.redirect("https://www.google.com");
-    })
+    });
 });
 
 // GET request for returning all urls
-router.get('/uri/all', (req, res) => {
+router.get('/uri/all', isLoggedIn, (req, res) => {
     Uri.find({}).then((data) => {
         res.json(data.map(uri => {
                 return {
@@ -34,7 +36,14 @@ router.get('/uri/all', (req, res) => {
 });
 
 // POST request for URI shortening
-router.post('/new', (req, res) => {
+router.post('/new', isLoggedIn, (req, res) => {
+
+    if (!(req.body.uri && req.body)) {
+        res.json({
+            status: 205,
+            message: 'Necessary Parameters Missing'
+        });
+    }
 
     // check if uri is valid
     const uriIsValid = validUrl.isWebUri(req.body.uri);
@@ -80,7 +89,14 @@ router.post('/new', (req, res) => {
 });
 
 // DELETE request for deleting shortened URI
-router.delete('/delete', (req, res) => {
+router.delete('/delete', isLoggedIn, (req, res) => {
+
+    if (!(req.body._id && req.body.shortUri)) {
+        res.json({
+            status: 205,
+            message: 'Necessary Parameters Missing'
+        })
+    }
 
     // delete using the _id and shortUri
     Uri.deleteOne({_id: req.body._id, shortUri: req.body.shortUri}).then((data) => {
