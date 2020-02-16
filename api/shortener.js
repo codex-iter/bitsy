@@ -17,7 +17,10 @@ router.get('/:shorturi', (req, res) => {
         res.redirect(data.originalUri);
     }).catch((err) => {
         // if not registered, rediret to 404 page
-        res.redirect("https://www.google.com");
+        res.json({
+            status: 400,
+            message: 'Not Found'
+        });
     });
 });
 

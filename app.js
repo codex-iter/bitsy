@@ -1,11 +1,12 @@
 // modules required
 const express = require('express');
 const session = require('express-session');
-const shortener = require('./api/shortener');
-const login = require('./api/login');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const cors = require('cors');
+const shortener = require('./api/shortener');
+const login = require('./api/login');
 
 // create app
 const app = express();
@@ -13,6 +14,14 @@ const app = express();
 // middlewares
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use(cors());
+const corsMiddleware = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, PATCH, POST, DELETE');
+
+    next();
+};
+app.use(corsMiddleware);
 app.use(session({
     secret: "cat keyword",
     resave: true,
