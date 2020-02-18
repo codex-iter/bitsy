@@ -10,7 +10,7 @@ const router = express.Router();
 router.post('/login', passport.authenticate('login'), (req, res) => {
     res.json({
         status: 200,
-        message: 'Logged In Succesfully'
+        message: 'Logged In Successfully'
     });
 });
 

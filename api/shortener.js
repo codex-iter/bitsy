@@ -18,7 +18,7 @@ router.get('/:shorturi', (req, res) => {
     }).catch((err) => {
         // if not registered, rediret to 404 page
         res.json({
-            status: 400,
+            status: 404,
             message: 'Not Found'
         });
     });
@@ -26,22 +26,33 @@ router.get('/:shorturi', (req, res) => {
 
 // GET request for returning all urls
 router.get('/uri/all', isLoggedIn, (req, res) => {
-    Uri.find({}).then((data) => {
-        res.json(data.map(uri => {
+
+    // all URI that has been shotened/registered
+    Uri.find({}).then((dataList) => {
+        res.json({
+            status: 200,
+            message: 'All URI list',
+            data: dataList.map(uri => {
                 return {
                     _id: uri._id,
                     createdAt: uri.createdAt,
                     originalUri: uri.originalUri,
                     shortUri: process.env.BASE_DOMAIN + uri.shortUri
                 }
-        }));
+            })
+        });
+    }).catch((err) => { // if no URI has been shotened/registered
+        res.json({
+            status: 202,
+            message: 'No URI regisitred'
+        });
     });
 });
 
 // POST request for URI shortening
 router.post('/new', isLoggedIn, (req, res) => {
 
-    if (!(req.body.uri && req.body)) {
+    if (!(req.body.uri)) {
         res.json({
             status: 205,
             message: 'Necessary Parameters Missing'
@@ -98,7 +109,7 @@ router.delete('/delete', isLoggedIn, (req, res) => {
         res.json({
             status: 205,
             message: 'Necessary Parameters Missing'
-        })
+        });
     }
 
     // delete using the _id and shortUri
