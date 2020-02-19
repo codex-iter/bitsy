@@ -29,22 +29,30 @@ router.get('/uri/all', isLoggedIn, (req, res) => {
 
     // all URI that has been shotened/registered
     Uri.find({}).then((dataList) => {
-        res.json({
-            status: 200,
-            message: 'All URI list',
-            data: dataList.map(uri => {
-                return {
-                    _id: uri._id,
-                    createdAt: uri.createdAt,
-                    originalUri: uri.originalUri,
-                    shortUri: process.env.BASE_DOMAIN + uri.shortUri
-                }
-            })
-        });
-    }).catch((err) => { // if no URI has been shotened/registered
+        
+        if(dataList.length == 0) { // if no URI has been shotened/registered
+            res.json({
+                status: 201,
+                message: 'No URI regisitred'
+            });
+        } else {
+            res.json({
+                status: 200,
+                message: 'All URI list',
+                data: dataList.map(uri => {
+                    return {
+                        _id: uri._id,
+                        createdAt: uri.createdAt,
+                        originalUri: uri.originalUri,
+                        shortUri: process.env.BASE_DOMAIN + uri.shortUri
+                    }
+                })
+            });
+        }
+    }).catch((err) => {
         res.json({
             status: 202,
-            message: 'No URI regisitred'
+            message: 'Error Occured'
         });
     });
 });
