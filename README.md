@@ -17,7 +17,7 @@ GET request for all registered URL and their corresponding short URL and ID
 | 201         | No URI regisitred            | No URLs has been shortened/registered                          |
 | 202         | Error Occured                | Error Occured while shortening the URL                         |
 
-![POST/login](https://img.shields.io/static/v1?label=POST&message=%2Flogin&colorB=0000cc&style=flat-square)
+![POST/user/login](https://img.shields.io/static/v1?label=POST&message=%2Fuser%2Flogin&colorB=0000cc&style=flat-square)
 
 POST request to login to the bitsy admin portal
 
@@ -32,7 +32,7 @@ POST request to login to the bitsy admin portal
 | :--         | :--------------------------- | :------------------------------------------------------------- |
 | 200         | Logged In Succesfully        | User logged in successfully                                    |
 
-![POST/logout](https://img.shields.io/static/v1?label=POST&message=%2Flogout&colorB=0000cc&style=flat-square)
+![POST/user/logout](https://img.shields.io/static/v1?label=POST&message=%2Fuser%2Flogout&colorB=0000cc&style=flat-square)
 
 POST request to logout from the bitsy admin portal
 <br>*Requires Authentication*
