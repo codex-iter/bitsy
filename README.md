@@ -59,16 +59,16 @@ POST request to register new URL for shortening
 #### Response
 | Status Code | Message                      | Reason                                                         |
 | :--         | :--------------------------- | :------------------------------------------------------------- |
-| 200         | Logged Out Succesfully       | User logged out successfully                                   |
+| 200         | Uri Registered Successfully  | User logged out successfully                                   |
 | 201         | URI already shortened        | The provided long URL alredy has a shortened URL               |
 | 202         | Error Occured                | Error Occured while shortening the URL                         |
 | 203         | Invalid URI                  | Invalid long URL was provided                                  |
 | 205         | Necessary Parameters Missing | One or More of the required/essential parameter is/are missing |
 | 210         | Not Logged In                | User is not logged in                                          |
 
-![DELETE/delete](https://img.shields.io/static/v1?label=DELETE&message=%2Fdelete&colorB=cc0000&style=flat-square)
+![POST/delete](https://img.shields.io/static/v1?label=POST&message=%2Fdelete&colorB=0000cc&style=flat-square)
 
-DELETE request for deleteing ab obselete registered URL
+POST request for deleteing an obselete registered URL
 <br>*Requires Authentication*
 
 #### Request Body

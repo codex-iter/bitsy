@@ -110,8 +110,8 @@ router.post('/new', isLoggedIn, (req, res) => {
     }
 });
 
-// DELETE request for deleting shortened URI
-router.delete('/delete', isLoggedIn, (req, res) => {
+// POST request for deleting shortened URI
+router.post('/delete', isLoggedIn, (req, res) => {
 
     if (!(req.body._id && req.body.shortUri)) {
         res.json({
