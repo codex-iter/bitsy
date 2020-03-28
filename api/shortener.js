@@ -2,7 +2,9 @@
 const express = require('express');
 const validUrl = require('valid-url');
 const shortId = require('shortid');
+const passport = require('passport');
 const Uri = require('../Schemas/uri');
+const isLoggedIn = require('../loginCheck');
 
 // creates router
 const router = express.Router();
@@ -15,26 +17,55 @@ router.get('/:shorturi', (req, res) => {
         res.redirect(data.originalUri);
     }).catch((err) => {
         // if not registered, rediret to 404 page
-        res.redirect("https://www.google.com");
-    })
+        res.json({
+            status: 404,
+            message: 'Not Found'
+        });
+    });
 });
 
 // GET request for returning all urls
-router.get('/uri/all', (req, res) => {
-    Uri.find({}).then((data) => {
-        res.json(data.map(uri => {
-                return {
-                    _id: uri._id,
-                    createdAt: uri.createdAt,
-                    originalUri: uri.originalUri,
-                    shortUri: process.env.BASE_DOMAIN + uri.shortUri
-                }
-        }));
+router.get('/uri/all', isLoggedIn, (req, res) => {
+
+    // all URI that has been shotened/registered
+    Uri.find({}).then((dataList) => {
+        
+        if(dataList.length == 0) { // if no URI has been shotened/registered
+            res.json({
+                status: 201,
+                message: 'No URI regisitred'
+            });
+        } else {
+            res.json({
+                status: 200,
+                message: 'All URI list',
+                data: dataList.map(uri => {
+                    return {
+                        _id: uri._id,
+                        createdAt: uri.createdAt,
+                        originalUri: uri.originalUri,
+                        shortUri: process.env.BASE_DOMAIN + uri.shortUri
+                    }
+                })
+            });
+        }
+    }).catch((err) => {
+        res.json({
+            status: 202,
+            message: 'Error Occured'
+        });
     });
 });
 
 // POST request for URI shortening
-router.post('/new', (req, res) => {
+router.post('/new', isLoggedIn, (req, res) => {
+
+    if (!(req.body.uri)) {
+        res.json({
+            status: 205,
+            message: 'Necessary Parameters Missing'
+        });
+    }
 
     // check if uri is valid
     const uriIsValid = validUrl.isWebUri(req.body.uri);
@@ -46,6 +77,7 @@ router.post('/new', (req, res) => {
             res.json({
                 status: 201,
                 message: 'URI already shortened',
+                originalUri: data.originalUri,
                 shortUri: process.env.BASE_DOMAIN + data.shortUri
             });
         }).catch((err) => {
@@ -61,6 +93,7 @@ router.post('/new', (req, res) => {
             newUri.save().then((dataSaved) => {
                 res.json({
                     status: 200,
+                    message: 'URI Registered Successfully',
                     originalUri: dataSaved.originalUri,
                     shortUri: process.env.BASE_DOMAIN + dataSaved.shortUri
                 });
@@ -79,8 +112,15 @@ router.post('/new', (req, res) => {
     }
 });
 
-// DELETE request for deleting shortened URI
-router.delete('/delete', (req, res) => {
+// POST request for deleting shortened URI
+router.post('/delete', isLoggedIn, (req, res) => {
+
+    if (!(req.body._id && req.body.shortUri)) {
+        res.json({
+            status: 205,
+            message: 'Necessary Parameters Missing'
+        });
+    }
 
     // delete using the _id and shortUri
     Uri.deleteOne({_id: req.body._id, shortUri: req.body.shortUri}).then((data) => {
