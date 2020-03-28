@@ -77,6 +77,7 @@ router.post('/new', isLoggedIn, (req, res) => {
             res.json({
                 status: 201,
                 message: 'URI already shortened',
+                originalUri: data.originalUri,
                 shortUri: process.env.BASE_DOMAIN + data.shortUri
             });
         }).catch((err) => {
@@ -92,6 +93,7 @@ router.post('/new', isLoggedIn, (req, res) => {
             newUri.save().then((dataSaved) => {
                 res.json({
                     status: 200,
+                    message: 'URI Registered Successfully',
                     originalUri: dataSaved.originalUri,
                     shortUri: process.env.BASE_DOMAIN + dataSaved.shortUri
                 });

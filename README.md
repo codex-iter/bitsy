@@ -59,7 +59,7 @@ POST request to register new URL for shortening
 #### Response
 | Status Code | Message                      | Reason                                                         |
 | :--         | :--------------------------- | :------------------------------------------------------------- |
-| 200         | Uri Registered Successfully  | User logged out successfully                                   |
+| 200         | URI Registered Successfully  | User logged out successfully                                   |
 | 201         | URI already shortened        | The provided long URL alredy has a shortened URL               |
 | 202         | Error Occured                | Error Occured while shortening the URL                         |
 | 203         | Invalid URI                  | Invalid long URL was provided                                  |
