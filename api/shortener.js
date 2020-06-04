@@ -10,6 +10,11 @@ const isLoggedIn = require('../loginCheck');
 const router = express.Router();
 
 // GET request for redirecting to original URI
+router.get('/', (req, res) => {
+    res.redirect(process.env.BASE_ADMIN.toString());
+});
+
+// GET request for redirecting to original URI
 router.get('/:shorturi', (req, res) => {
 
     // check if shortened URI is registered 
