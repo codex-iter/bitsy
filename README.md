@@ -52,19 +52,20 @@ POST request to register new URL for shortening
 <br>*Requires Authentication*
 
 #### Request Body
-| Feild        | Description                        | Required |
-| :----------- | :--------------------------------- | :------- |
-| uri          | The URL to be shortened            | True     |
+| Feild        | Description                             | Required |
+| :----------- | :-------------------------------------- | :------- |
+| uri          | The URL to be shortened                 | True     |
+| shortUri     | The preferred short uri or empty string | False    |
 
 #### Response
-| Status Code | Message                      | Reason                                                         |
-| :--         | :--------------------------- | :------------------------------------------------------------- |
-| 200         | URI Registered Successfully  | User logged out successfully                                   |
-| 201         | URI already shortened        | The provided long URL alredy has a shortened URL               |
-| 202         | Error Occured                | Error Occured while shortening the URL                         |
-| 203         | Invalid URI                  | Invalid long URL was provided                                  |
-| 205         | Necessary Parameters Missing | One or More of the required/essential parameter is/are missing |
-| 210         | Not Logged In                | User is not logged in                                          |
+| Status Code | Message                         | Reason                                                         |
+| :--         | :------------------------------ | :------------------------------------------------------------- |
+| 200         | URI Registered Successfully     | User logged out successfully                                   |
+| 201         | URI/ShortURI already registered | The provided long URL alredy has a shortened URL               |
+| 202         | Error Occured                   | Error Occured while shortening the URL                         |
+| 203         | Invalid URI                     | Invalid long URL was provided                                  |
+| 205         | Necessary Parameters Missing    | One or More of the required/essential parameter is/are missing |
+| 210         | Not Logged In                   | User is not logged in                                          |
 
 ![POST/delete](https://img.shields.io/static/v1?label=POST&message=%2Fdelete&colorB=0000cc&style=flat-square)
 

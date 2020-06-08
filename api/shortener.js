@@ -10,6 +10,11 @@ const isLoggedIn = require('../loginCheck');
 const router = express.Router();
 
 // GET request for redirecting to original URI
+router.get('/', (req, res) => {
+    res.redirect(process.env.BASE_ADMIN.toString());
+});
+
+// GET request for redirecting to original URI
 router.get('/:shorturi', (req, res) => {
 
     // check if shortened URI is registered 
@@ -72,22 +77,31 @@ router.post('/new', isLoggedIn, (req, res) => {
 
     if(uriIsValid) {
 
-        // check if the original URI has alreay has a shortened URI 
-        Uri.findOne({originalUri: req.body.uri}).then((data) => {
+        let preferredUri = "";
+        if (req.body.shortUri) {
+            preferredUri = req.body.shortUri;
+        }
+
+        // check if the original URI or short URI has alreay been used 
+        Uri.findOne({ $or: [ {originalUri: req.body.uri}, {shortUri: preferredUri} ] }).then((data) => {
             res.json({
                 status: 201,
-                message: 'URI already shortened',
+                message: 'URI/ShortURI already registered',
                 originalUri: data.originalUri,
                 shortUri: process.env.BASE_DOMAIN + data.shortUri
             });
         }).catch((err) => {
 
             // generate shortened URI
-            const newUri = new Uri({
+            let newUri = new Uri({
                 createdAt: new Date(),
                 originalUri: req.body.uri,
                 shortUri: shortId.generate()
             });
+
+            if(preferredUri.length > 0) {
+                newUri.shortUri = preferredUri;
+            }
 
             // save generated short URI
             newUri.save().then((dataSaved) => {

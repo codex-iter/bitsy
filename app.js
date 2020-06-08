@@ -14,9 +14,11 @@ const app = express();
 // middlewares
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({credentials: true, origin: process.env.BASE_ADMIN.toString()}));
 const corsMiddleware = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Origin', process.env.BASE_ADMIN.toString());
+    res.header('Access-Control-Allow-Origin', process.env.BASE_ADMIN.toString());
+    res.header('Access-Control-Allow-Credentials', true);
     res.header('Access-Control-Allow-Methods', 'OPTIONS, GET, PUT, PATCH, POST, DELETE');
 
     next();
